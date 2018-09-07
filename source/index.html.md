@@ -3,9 +3,7 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
-  - javascript
+  - html
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -19,221 +17,86 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+DEA identification service
+community project.
+The repository for DEA information is emails.txt hosted at https://github.com/wesbos/burner-email-providers
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# API reference
 
-# Authentication
+## Validate domain
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+> HTTP GET:
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+curl "api/dea/check/{email}"
 ```
 
-```javascript
-const kittn = require('kittn');
+```html
+GET /api/dea/check/{email} HTTP/1.1
+Host: null
 
-let api = kittn.authorize('meowmeowmeow');
+Accept: application/json
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+> HTTP POST:
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl "api/dea/check"
 ```
 
-```javascript
-const kittn = require('kittn');
+```html
+GET /api/dea/check HTTP/1.1
+Host: null
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+Accept: application/json
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "doc":"https://github.com/wesbos/burner-email-providers",
+  "query":"test@example.com",
+  "result": {
+    "isDisposable": true,
+    "error":"e.g. no text supplied"
+    }
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET /api/dea/check/{email}`
+<br/>
+`POST /api/dea/check`
 
-### URL Parameters
+### Inputs
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+Input | Type | Description | Example Data
+--------- | ----------- | ----------- | ----------
+query | String (255, not null) | Input domain for checking against DEA domain list. | “example.com”
 
-## Delete a Specific Kitten
+### Outputs
 
-```ruby
-require 'kittn'
+Output | Type | Description | Example Data
+--------- | ----------- | ----------- | ----------
+isDisposable | True/False | Output result from matching DEA domain list. | True
+Error | String (255, null) | Output error if unable to validate | e.g. “No text supplied”
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
+### Possible Error States
 
-```python
-import kittn
+Error type | Text 
+--------- | ----------- 
+NoText | True/False 
+EmailAddressSupplied | String (255, null)
+QueryTooLong | True/False 
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+### Input validation
 
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
+Condition | Action |  Description | Example
+--------- | ------ | ------------ | -------
+No text | Generate error state “NoText” | Verify that input is supplied | “”
+Query too long | Generate error state “QueryTooLong” | Verify that input < MaxAllowed | “[>255 characters in length]”
+Email address supplied | Generate error state “EmailAddressSupplied” | Verify data isn't an email address | “anyone@example.com”
