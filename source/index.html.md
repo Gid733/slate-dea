@@ -10,10 +10,6 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - java 
   - go
 
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
-
 includes:
   - errors
 
@@ -22,7 +18,7 @@ search: true
 
 # Introduction
 
-DEA identification service
+Disposable email addresses identification service
 community project.
 The repository for DEA information is emails.txt hosted at https://github.com/wesbos/burner-email-providers
 
@@ -31,14 +27,12 @@ The repository for DEA information is emails.txt hosted at https://github.com/we
 
 ## Validate domain
 
-> HTTP GET:
-
-```Shell
-curl "api/dea/check/{email}"
+```shell
+curl "api/dea/check/{domain}"
 ```
 
 ```html
-GET /api/dea/check/{email} HTTP/1.1
+GET /api/dea/check/{domain} HTTP/1.1
 Host: null
 
 Accept: application/json
@@ -52,7 +46,7 @@ var headers = {
 };
 
 $.ajax({
-  url: '/api/dea/check/{email}',
+  url: '/api/dea/check/{domain}',
   method: 'get',
 
   headers: headers,
@@ -72,7 +66,7 @@ headers = {
   'Accept' => 'application/json'
 }
 
-result = RestClient.get '/api/dea/check/{email}',
+result = RestClient.get '/api/dea/check/{domain}',
   params: {
   }, headers: headers
 
@@ -88,7 +82,7 @@ headers = {
   'Accept': 'application/json'
 }
 
-r = requests.get('/api/dea/check/{email}', params={
+r = requests.get('/api/dea/check/{domain}', params={
 
 }, headers = headers)
 
@@ -98,7 +92,7 @@ print r.json()
 
 ```java
 
-URL obj = new URL("/api/dea/check/{email}");
+URL obj = new URL("/api/dea/check/{domain}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("GET");
 int responseCode = con.getResponseCode();
@@ -131,7 +125,7 @@ func main() {
     }
 
     data := bytes.NewBuffer([]byte{jsonReq})
-    req, err := http.NewRequest("GET", "/api/dea/check/{email}", data)
+    req, err := http.NewRequest("GET", "/api/dea/check/{domain}", data)
     req.Header = headers
 
     client := &http.Client{}
@@ -146,19 +140,21 @@ func main() {
 ```json
 {
   "doc":"https://github.com/wesbos/burner-email-providers",
-  "query":"test@example.com",
+  "query":"example.com",
   "result": {
     "isDisposable": true,
-    "error":"e.g. no text supplied"
+    "error": null
     }
 }
 ```
 
 ### HTTP Request
 
-`GET /api/dea/check/{email}`
+`GET /api/dea/check/{domain}`
 <br/>
 `POST /api/dea/check`
+<br/> 
+`body: { query: "string" }`
 
 ### Inputs
 
